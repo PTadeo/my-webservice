@@ -1,65 +1,35 @@
-from flask import Flask, jsonify, render_template_string
-import json
-
-app = Flask(__name__)
-
-# Ruta principal con HTML bonito
-@app.route("/")
-def home():
-    html = """
+@app.route("/web/saludo/<nombre>")
+def saludar_web(nombre):
+    return render_template_string(f"""
     <html>
         <head>
-            <title>🌐 Mi Web Service</title>
+            <title>Saludo Web</title>
             <style>
-                body { font-family: Arial; text-align: center; background: #f0f0f0; }
-                h1 { color: #007BFF; }
-                p { font-size: 18px; }
-                .card {
-                    background: white; 
-                    padding: 20px; 
-                    border-radius: 10px; 
-                    width: 50%; 
-                    margin: auto;
-                    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-                }
-                a {
-                    text-decoration: none;
-                    color: white;
-                    background: #007BFF;
-                    padding: 10px 20px;
-                    border-radius: 8px;
-                    font-weight: bold;
-                }
-                a:hover {
-                    background: #0056b3;
-                }
+                body {{
+                    font-family: Arial, sans-serif;
+                    background: #f4f4f9;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }}
+                .card {{
+                    background: white;
+                    padding: 30px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                    text-align: center;
+                }}
+                h1 {{ color: #007BFF; }}
+                p {{ color: #555; }}
             </style>
         </head>
         <body>
             <div class="card">
-                <h1>🚀 Bienvenido a mi Web Service Gratuito</h1>
-                <p>Este servicio está hecho con Flask.</p>
-                <p>
-                    👉 Prueba la API con un clic:<br><br>
-                    <a href="/api/saludo/Honorio%20Haro">Saludar a Honorio Haro</a>
-                </p>
+                <h1>👋 Hola {nombre}!</h1>
+                <p>Bienvenido a mi API con Flask 🎉</p>
+                <p>Desarrollado por <b>Pablo Tadeo Torres Leal</b></p>
             </div>
         </body>
     </html>
-    """
-    return render_template_string(html)
-
-# Endpoint JSON (API) con soporte de emojis y acentos
-@app.route("/api/saludo/<nombre>")
-def saludar(nombre):
-    mensaje = {
-        "saludo": f"Hola {nombre}, bienvenido a mi API con Flask 🎉 si ve esto póngame un diezon "
-    }
-    return app.response_class(
-        response=json.dumps(mensaje, ensure_ascii=False),
-        mimetype="application/json"
-    )
-
-# Iniciar servidor
-if __name__ == "__main__":
-    app.run(debug=True)
+    """)
