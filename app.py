@@ -1,27 +1,20 @@
-from flask import Flask, jsonify, render_template_string
-import json
+from flask import Flask, jsonify, request
 
-# 1. Crear la aplicación
 app = Flask(__name__)
 
-# 2. Rutas
-@app.route("/")
-def home():
-    return "Hola, este es el home"
+# Ruta que recibe un parámetro por la URL
+@app.route("/saludo", methods=["GET"])
+def saludo():
+    # Obtener el parámetro "nombre" desde la URL ?nombre=valor
+    nombre = request.args.get("nombre", default="invitado")
 
-@app.route("/api/saludo/<nombre>")
-def saludar_api(nombre):
-    mensaje = {"saludo": f"Hola {nombre}"}
-    return app.response_class(
-        response=json.dumps(mensaje, ensure_ascii=False, indent=4),
-        mimetype="application/json"
-    )
+    # Usar el parámetro en la respuesta JSON
+    respuesta = {
+        "mensaje": f"Hola {nombre}, bienvenido a mi API 🎉",
+        "status": "ok"
+    }
 
-@app.route("/web/saludo/<nombre>")
-def saludar_web(nombre):
-    return f"<h1>👋 Hola {nombre}!</h1><p>Bienvenido a mi API con Flask 🎉</p>"
+    return jsonify(respuesta)
 
-# 3. Ejecutar (solo localmente, Render no usa esto)
 if __name__ == "__main__":
     app.run(debug=True)
-
